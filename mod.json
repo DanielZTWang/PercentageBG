@@ -1,0 +1,23 @@
+{
+	"geode": "4.10.0",
+	"gd": {
+		"win": "2.2074",
+		"android": "2.2074",
+		"mac": "2.2074",
+		"ios": "2.2074"
+	},
+	"id": "parkorem.percentagebg",
+	"name": "PercentageBG",
+	"version": "v1.0.0",
+	"developer": "ParkoreM",
+	"description": "",
+	"dependencies": {
+		"geode.node-ids": ">=v1.20.0"
+	},
+    "resources": {
+        "sprites": [
+            "resources/bg.png"
+        ]
+    }
+}
+
