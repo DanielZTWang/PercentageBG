@@ -15,9 +15,6 @@
 		"geode.node-ids": ">=v1.20.0"
 	},
     "resources": {
-        "sprites": [
-            "resources/bg.png"
-        ]
     }
 }
 
