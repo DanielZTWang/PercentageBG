@@ -1,2 +1,2 @@
-# PercentageBG
-This mod is just for programs to read percentage/status data, it is not supposed to be a good mod.
+# PercentageReader
+This mod was just made to save percentage and player status to a file, it is not supposed to be a good mod.
