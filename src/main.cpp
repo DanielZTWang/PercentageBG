@@ -8,10 +8,15 @@
 using namespace geode::prelude;
 
 static std::filesystem::path getOutputPath() {
-    return Mod::get()->getSaveDir() / "gd_percent.txt";
+    auto dir = std::filesystem::path(
+        "C:/..." // REPLACE WITH OUTPUT PATH
+    );
+
+    std::filesystem::create_directories(dir);
+    return dir / "gd_data.txt";
 }
 
-static void writeState(float percent, bool dead, bool completed) {
+static void writeState(std::string percent, bool dead, bool completed) {
     std::ofstream file(getOutputPath(), std::ios::trunc);
 
     if (!file.is_open()) {
@@ -24,25 +29,39 @@ static void writeState(float percent, bool dead, bool completed) {
 }
 
 class $modify(MyPlayLayer, PlayLayer) {
+    bool init(GJGameLevel* level, bool useReplay, bool dontCreateObjects) {
+        if (!PlayLayer::init(level, useReplay, dontCreateObjects)) {
+            return false;
+        }
 
-	struct Fields {
-		CCSprite* m_bgSprite;
-	};
+        writeState("0.0", false, false);
+        return true;
+    }
 
-	bool init(GJGameLevel* p0, bool p1, bool p2) {
-		if (!PlayLayer::init(p0, p1, p2)) {
-			return false;
+    void postUpdate(float dt) {
+        PlayLayer::postUpdate(dt);
+
+		std::string percent = "0.0";
+
+		if (this->m_percentageLabel) {
+			percent = this->m_percentageLabel->getString();
+
+			if (!percent.empty() && percent.back() == '%') {
+				percent.pop_back();
+			}
 		}
 
-		CCMenu* menu = CCMenu::create();
+		bool completed = this->m_hasCompletedLevel;
+		writeState(percent, false, completed);
+    }
 
-		m_fields->m_bgSprite = CCSprite::create("bg.png"_spr);
-		m_fields->m_bgSprite->setAnchorPoint({0.0f, 1.0f});
-		m_fields->m_bgSprite->setPosition(ccp(390, 320));
-		m_fields->m_bgSprite->setVisible(true);
+    void destroyPlayer(PlayerObject* player, GameObject* object) {
+        writeState("0.0", true, false);
+        PlayLayer::destroyPlayer(player, object);
+    }
 
-		this->addChild(m_fields->m_bgSprite);
-
-		return true;
-	}
+    void resetLevel() {
+        PlayLayer::resetLevel();
+        writeState("0.0", false, false);
+    }
 };
